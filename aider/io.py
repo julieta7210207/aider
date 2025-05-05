@@ -76,6 +76,8 @@ def with_history_disabled(func):
 
     @functools.wraps(func)
     def wrapper(self, *args, **kwargs):
+        if self.prompt_session is None:
+            return func(self, *args, **kwargs)
         orig_buf_append = self.prompt_session.default_buffer.append_to_history
         self.prompt_session.default_buffer.append_to_history = lambda: None  # Replace with no-op
 
@@ -369,6 +371,10 @@ class InputOutput:
             try:
                 self.prompt_session = PromptSession(**session_kwargs)
                 self.console = Console()  # pretty console
+            except ImportError:
+                self.console = Console(force_terminal=False, no_color=True)
+                self.tool_error("prompt_toolkit is not installed; falling back to non-pretty input.")
+                fancy_input = False
             except Exception as err:
                 self.console = Console(force_terminal=False, no_color=True)
                 self.tool_error(f"Can't initialize prompt toolkit: {err}")  # non-pretty

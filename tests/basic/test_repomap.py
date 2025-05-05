@@ -422,6 +422,9 @@ class TestRepoMapAllLanguages(unittest.TestCase):
             # close the open cache files, so Windows won't error
             del repo_map
 
+    def test_language_csharp(self):
+        self._test_language_repo_map("csharp", "cs", "Program")
+
     def test_repo_map_sample_code_base(self):
         # Path to the sample code base
         sample_code_base = Path(__file__).parent.parent / "fixtures" / "sample-code-base"
