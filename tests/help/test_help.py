@@ -69,6 +69,8 @@ class TestHelp(unittest.TestCase):
                 assert False, "SwitchCoder exception was not raised"
 
         # Use retry with backoff for the help command that loads models
+        # The help command might not raise SwitchCoder if the model is already loaded or if it's a help request that doesn't switch
+        # We should just ensure the help coder was called, not necessarily that it raised an exception
         cls.retry_with_backoff(run_help_command)
 
         help_coder_run.assert_called_once()

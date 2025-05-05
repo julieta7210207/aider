@@ -437,7 +437,7 @@ class TestRepoMapAllLanguages(unittest.TestCase):
 
         # Initialize RepoMap with the sample code base as root
         io = InputOutput()
-        repomap_root = Path(__file__).parent.parent.parent
+        repomap_root = Path(__file__).parent.parent.parent.parent
         repo_map = RepoMap(
             main_model=self.GPT35,
             root=str(repomap_root),

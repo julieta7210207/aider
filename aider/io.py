@@ -376,6 +376,18 @@ class InputOutput:
             self.console = Console(force_terminal=False, no_color=True)  # non-pretty
             if self.is_dumb_terminal:
                 self.tool_output("Detected dumb terminal, disabling fancy input and pretty output.")
+            # Ensure prompt_session is initialized even for non-fancy input to avoid NoneType errors
+            session_kwargs = {
+                "input": self.input,
+                "output": self.output,
+                "editing_mode": self.editingmode,
+            }
+            if self.input_history_file is not None:
+                session_kwargs["history"] = FileHistory(self.input_history_file)
+            try:
+                self.prompt_session = PromptSession(**session_kwargs)
+            except Exception:
+                self.prompt_session = None
 
         self.file_watcher = file_watcher
         self.root = root
