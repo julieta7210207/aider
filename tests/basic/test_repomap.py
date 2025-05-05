@@ -337,6 +337,35 @@ class TestRepoMapAllLanguages(unittest.TestCase):
         self._test_language_repo_map("tsx", "tsx", "UserProps")
 
     def test_language_csharp(self):
+        skip_reason = None
+        try:
+            import tree_sitter
+            from grep_ast.tsl import get_language, get_parser
+
+            language = get_language("csharp")
+            lang_version = getattr(language, "abi_version", None)
+            if lang_version is None:
+                lang_version = getattr(language, "version", None)
+            min_version = getattr(tree_sitter, "MIN_COMPATIBLE_LANGUAGE_VERSION", None)
+            max_version = getattr(tree_sitter, "LANGUAGE_VERSION", None)
+            if (
+                lang_version is not None
+                and min_version is not None
+                and max_version is not None
+                and not (min_version <= lang_version <= max_version)
+            ):
+                skip_reason = (
+                    f"C# grammar language version {lang_version} is not supported by the"
+                    f" tree-sitter runtime (must be between {min_version} and {max_version})"
+                )
+            else:
+                get_parser("csharp")
+        except Exception as err:
+            skip_reason = f"C# tree-sitter grammar is not usable: {err}"
+
+        if skip_reason:
+            self.skipTest(skip_reason)
+
         self._test_language_repo_map("csharp", "cs", "IGreeter")
 
     def test_language_elisp(self):
