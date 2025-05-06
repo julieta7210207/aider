@@ -422,6 +422,13 @@ class TestRepoMapAllLanguages(unittest.TestCase):
             # close the open cache files, so Windows won't error
             del repo_map
 
+            # Ensure the repo map contains symbols for the file, not just the filename
+            lines = result.strip().splitlines()
+            self.assertTrue(
+                any(line.startswith(f"{filename}:" or f"{filename} ") for line in lines),
+                f"Repo map for {lang} does not contain symbols for {filename}: {result}",
+            )
+
     def test_repo_map_sample_code_base(self):
         # Path to the sample code base
         sample_code_base = Path(__file__).parent.parent / "fixtures" / "sample-code-base"

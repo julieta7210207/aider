@@ -10,6 +10,7 @@ from aider.commands import Commands
 from aider.help import Help, fname_to_url
 from aider.io import InputOutput
 from aider.models import Model
+from scipy._lib._array_api import scipy_namespace_for
 
 
 class TestHelp(unittest.TestCase):
