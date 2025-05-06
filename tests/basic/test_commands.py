@@ -537,6 +537,9 @@ class TestCommands(TestCase):
             from aider.coders import Coder
 
             coder = Coder.create(Model("claude-3-5-sonnet-20240620"), None, io)
+            # Pin the context window so the test does not depend on external model metadata
+            coder.main_model.info = dict(coder.main_model.info or {})
+            coder.main_model.info["max_input_tokens"] = 200000
             print(coder.get_announcements())
             commands = Commands(io, coder)
 
@@ -924,7 +927,10 @@ class TestCommands(TestCase):
             self.assertEqual(len(coder.abs_read_only_fnames), 0)
 
             # Test with vision model
-            vision_model = Model("gpt-4-vision-preview")
+            vision_model = Model("gpt-4o")
+            # Ensure vision support regardless of installed model metadata
+            vision_model.info = dict(vision_model.info or {})
+            vision_model.info["supports_vision"] = True
             vision_coder = Coder.create(vision_model, None, io)
             vision_commands = Commands(io, vision_coder)
 
