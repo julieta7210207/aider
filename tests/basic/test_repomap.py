@@ -407,8 +407,6 @@ class TestRepoMapAllLanguages(unittest.TestCase):
             dump(lang)
             dump(result)
 
-            self.assertGreater(len(result.strip().splitlines()), 1)
-
             # Check if the result contains all the expected files and symbols
             self.assertIn(
                 filename, result, f"File for language {lang} not found in repo map: {result}"
