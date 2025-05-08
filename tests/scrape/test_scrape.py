@@ -11,6 +11,7 @@ class TestScrape(unittest.TestCase):
     def test_scrape_self_signed_ssl(self):
         def scrape_with_retries(scraper, url, max_retries=5, delay=0.5):
             for _ in range(max_retries):
+                scraper.print_error.reset_mock()
                 result = scraper.scrape(url)
                 if result is not None:
                     return result
