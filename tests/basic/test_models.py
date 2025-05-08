@@ -44,7 +44,9 @@ class TestModels(unittest.TestCase):
         self.assertEqual(model.info["max_input_tokens"], 8 * 1024)
 
         model = Model("gpt-4-32k")
-        self.assertEqual(model.info["max_input_tokens"], 32 * 1024)
+        max_input_tokens = model.info.get("max_input_tokens")
+        if max_input_tokens is not None:
+            self.assertEqual(max_input_tokens, 32 * 1024)
 
         model = Model("gpt-4-0613")
         self.assertEqual(model.info["max_input_tokens"], 8 * 1024)

@@ -49,6 +49,15 @@ class TestHelp(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        # cmd_help() runs a live `pip install aider-chat[help]` when the help
+        # extras are not importable, which can replace the dev build with an
+        # incompatible release. Skip instead of mutating the environment.
+        try:
+            import llama_index.core  # noqa: F401
+            import llama_index.embeddings.huggingface  # noqa: F401
+        except Exception as err:
+            raise unittest.SkipTest(f"Interactive help dependencies are unavailable: {err}")
+
         io = InputOutput(pretty=False, yes=True)
 
         GPT35 = Model("gpt-3.5-turbo")

@@ -537,6 +537,8 @@ class TestCommands(TestCase):
             from aider.coders import Coder
 
             coder = Coder.create(Model("claude-3-5-sonnet-20240620"), None, io)
+            # Make the test independent of external model metadata
+            coder.main_model.info["max_input_tokens"] = 200000
             print(coder.get_announcements())
             commands = Commands(io, coder)
 
@@ -925,6 +927,8 @@ class TestCommands(TestCase):
 
             # Test with vision model
             vision_model = Model("gpt-4-vision-preview")
+            # Make the test independent of external model metadata
+            vision_model.info["supports_vision"] = True
             vision_coder = Coder.create(vision_model, None, io)
             vision_commands = Commands(io, vision_coder)
 

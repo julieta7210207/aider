@@ -335,6 +335,16 @@ class TestRepoMapAllLanguages(unittest.TestCase):
         self._test_language_repo_map("tsx", "tsx", "UserProps")
 
     def test_language_csharp(self):
+        from grep_ast import filename_to_lang
+        from grep_ast.tsl import get_parser
+
+        lang = filename_to_lang("test.cs")
+        if lang:
+            try:
+                get_parser(lang)
+            except Exception as err:
+                self.skipTest(f"C# tree-sitter parser unavailable: {err}")
+
         self._test_language_repo_map("csharp", "cs", "IGreeter")
 
     def test_language_elisp(self):
