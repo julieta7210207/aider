@@ -32,7 +32,7 @@ class TestModels(unittest.TestCase):
 
     def test_max_context_tokens(self):
         model = Model("gpt-3.5-turbo")
-        self.assertEqual(model.info["max_input_tokens"], 16385)
+        self.assertEqual(model.info["max_input_tokens"], 4096)
 
         model = Model("gpt-3.5-turbo-16k")
         self.assertEqual(model.info["max_input_tokens"], 16385)
@@ -41,13 +41,13 @@ class TestModels(unittest.TestCase):
         self.assertEqual(model.info["max_input_tokens"], 16385)
 
         model = Model("gpt-4")
-        self.assertEqual(model.info["max_input_tokens"], 8 * 1024)
+        self.assertEqual(model.info["max_input_tokens"], 8192)
 
         model = Model("gpt-4-32k")
-        self.assertEqual(model.info["max_input_tokens"], 32 * 1024)
+        self.assertEqual(model.info["max_input_tokens"], 32768)
 
         model = Model("gpt-4-0613")
-        self.assertEqual(model.info["max_input_tokens"], 8 * 1024)
+        self.assertEqual(model.info["max_input_tokens"], 8192)
 
     @patch("os.environ")
     def test_sanity_check_model_all_set(self, mock_environ):
