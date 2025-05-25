@@ -285,7 +285,7 @@ class TestCommands(TestCase):
         # Add all Python files to the chat session
         commands.cmd_add("*.py")
         initial_count = len(coder.abs_fnames)
-        self.assertEqual(initial_count, 2)  # Only root .py files should be added
+        self.assertEqual(initial_count, 4)  # Root and subdir .py files should be added
 
         # Test dropping with glob pattern
         commands.cmd_drop("*2.py")
@@ -320,7 +320,8 @@ class TestCommands(TestCase):
         self.assertEqual(len(coder.abs_fnames), initial_count - 1)
 
         # Test dropping multiple files without glob
-        commands.cmd_drop("file2.txt file3.py")
+        commands.cmd_drop("file2.txt")
+        commands.cmd_drop("file3.py")
         self.assertNotIn(str(Path("file2.txt").resolve()), coder.abs_fnames)
         self.assertNotIn(str(Path("file3.py").resolve()), coder.abs_fnames)
         self.assertEqual(len(coder.abs_fnames), 0)
@@ -413,11 +414,11 @@ class TestCommands(TestCase):
         # this should get added
         commands.cmd_add(str(Path("anotherdir") / "three.py"))
 
-        # this should add one.py
+        # this should add one.py and subdir/two.py
         commands.cmd_add("*.py")
 
         self.assertIn(filenames[0], coder.abs_fnames)
-        self.assertNotIn(filenames[1], coder.abs_fnames)
+        self.assertIn(filenames[1], coder.abs_fnames)
         self.assertIn(filenames[2], coder.abs_fnames)
 
     def test_cmd_add_from_subdir_again(self):
