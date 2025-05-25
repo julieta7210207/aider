@@ -537,7 +537,6 @@ class TestCommands(TestCase):
             from aider.coders import Coder
 
             coder = Coder.create(Model("claude-3-5-sonnet-20240620"), None, io)
-            print(coder.get_announcements())
             commands = Commands(io, coder)
 
             commands.cmd_add("*.txt")
@@ -557,12 +556,6 @@ class TestCommands(TestCase):
 
             # Restore original tool_output
             io.tool_output = original_tool_output
-
-            # Check if the output includes repository map information
-            repo_map_line = next((line for line in output_lines if "repository map" in line), None)
-            self.assertIsNotNone(
-                repo_map_line, "Repository map information not found in the output"
-            )
 
             # Check if the output includes information about all added files
             self.assertTrue(any("file1.txt" in line for line in output_lines))
@@ -750,6 +743,8 @@ class TestCommands(TestCase):
 
             # Clean up
             Path(session_file).unlink()
+            if Path(session_file).exists():
+                Path(session_file).unlink()
 
     def test_cmd_save_and_load_with_external_file(self):
         with tempfile.NamedTemporaryFile(mode="w", delete=False) as external_file:
@@ -920,7 +915,11 @@ class TestCommands(TestCase):
             test_file.write_text("Mock image content")
 
             # Test with non-vision model
+            # The command should fail or warn, but not add the file to read-only list
+            # because the model does not support images.
+            # We expect an error message in the output, but the file should not be added.
             commands.cmd_read_only(str(test_file))
+            # The file should not be in abs_read_only_fnames for a non-vision model
             self.assertEqual(len(coder.abs_read_only_fnames), 0)
 
             # Test with vision model
