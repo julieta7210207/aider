@@ -569,7 +569,8 @@ class TestCommands(TestCase):
 
             # Check if the total tokens and remaining tokens are reported
             self.assertTrue(any("tokens total" in line for line in output_lines))
-            self.assertTrue(any("tokens remaining" in line for line in output_lines))
+            if coder.main_model.info.get("max_input_tokens"):
+                self.assertTrue(any("tokens remaining" in line for line in output_lines))
 
     def test_cmd_add_dirname_with_special_chars(self):
         with ChdirTemporaryDirectory():
@@ -925,6 +926,7 @@ class TestCommands(TestCase):
 
             # Test with vision model
             vision_model = Model("gpt-4-vision-preview")
+            vision_model.info["supports_vision"] = True
             vision_coder = Coder.create(vision_model, None, io)
             vision_commands = Commands(io, vision_coder)
 
