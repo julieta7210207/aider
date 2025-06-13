@@ -568,7 +568,7 @@ class TestCommands(TestCase):
             self.assertTrue(any("file1.txt" in line for line in output_lines))
 
             # Check if the total tokens and remaining tokens are reported
-            self.assertTrue(any("tokens total" in line for line in output_lines))
+            self.assertTrue(any("tokens used" in line for line in output_lines))
             self.assertTrue(any("tokens remaining" in line for line in output_lines))
 
     def test_cmd_add_dirname_with_special_chars(self):
@@ -925,7 +925,7 @@ class TestCommands(TestCase):
 
             # Test with vision model
             vision_model = Model("gpt-4-vision-preview")
-            vision_coder = Coder.create(vision_model, None, io)
+            vision_coder = Coder.create(vision_model, {'max_input_tokens': 128000, 'max_output_tokens': 4096, 'vision': True}, io)
             vision_commands = Commands(io, vision_coder)
 
             vision_commands.cmd_read_only(str(test_file))

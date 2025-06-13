@@ -335,7 +335,7 @@ class TestRepoMapAllLanguages(unittest.TestCase):
         self._test_language_repo_map("tsx", "tsx", "UserProps")
 
     def test_language_csharp(self):
-        self._test_language_repo_map("csharp", "cs", "IGreeter")
+        self._test_language_repo_map("csharp", "cs", "IGreeter", language_version="10")
 
     def test_language_elisp(self):
         self._test_language_repo_map("elisp", "el", "greeter")
@@ -388,7 +388,7 @@ class TestRepoMapAllLanguages(unittest.TestCase):
     def test_language_ocaml_interface(self):
         self._test_language_repo_map("ocaml_interface", "mli", "Greeter")
 
-    def _test_language_repo_map(self, lang, key, symbol):
+    def _test_language_repo_map(self, lang, key, symbol, language_version=None):
         """Helper method to test repo map generation for a specific language."""
         # Get the fixture file path and name based on language
         fixture_dir = self.fixtures_dir / lang
@@ -405,7 +405,7 @@ class TestRepoMapAllLanguages(unittest.TestCase):
                 f.write(content)
 
             io = InputOutput()
-            repo_map = RepoMap(main_model=self.GPT35, root=temp_dir, io=io)
+            repo_map = RepoMap(main_model=self.GPT35, root=temp_dir, io=io, language_version=language_version)
             other_files = [test_file]
             result = repo_map.get_repo_map([], other_files)
             dump(lang)
