@@ -537,6 +537,10 @@ class TestCommands(TestCase):
             from aider.coders import Coder
 
             coder = Coder.create(Model("claude-3-5-sonnet-20240620"), None, io)
+            # Ensure context-window metadata is present so cmd_tokens reports remaining tokens
+            coder.main_model.info = dict(coder.main_model.info or {})
+            if not coder.main_model.info.get("max_input_tokens"):
+                coder.main_model.info["max_input_tokens"] = 200000
             print(coder.get_announcements())
             commands = Commands(io, coder)
 
@@ -924,7 +928,7 @@ class TestCommands(TestCase):
             self.assertEqual(len(coder.abs_read_only_fnames), 0)
 
             # Test with vision model
-            vision_model = Model("gpt-4-vision-preview")
+            vision_model = Model("gpt-4o")
             vision_coder = Coder.create(vision_model, None, io)
             vision_commands = Commands(io, vision_coder)
 
