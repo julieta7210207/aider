@@ -949,12 +949,12 @@ class Model(ModelSettings):
 
             kwargs["temperature"] = temperature
 
+        if self.extra_params:
+            kwargs.update(self.extra_params)
         if functions is not None:
             function = functions[0]
             kwargs["tools"] = [dict(type="function", function=function)]
             kwargs["tool_choice"] = {"type": "function", "function": {"name": function["name"]}}
-        if self.extra_params:
-            kwargs.update(self.extra_params)
         if self.is_ollama() and "num_ctx" not in kwargs:
             num_ctx = int(self.token_count(messages) * 1.25) + 8192
             kwargs["num_ctx"] = num_ctx
@@ -979,7 +979,7 @@ class Model(ModelSettings):
 
             self.github_copilot_token_to_open_ai_key(kwargs["extra_headers"])
 
-        res = litellm.completion(tools=[{"googleSearch": {}}], **kwargs)
+        res = litellm.completion(**kwargs)
         return hash_object, res
 
     def simple_send_with_retries(self, messages):
