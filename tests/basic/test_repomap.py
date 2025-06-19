@@ -335,6 +335,14 @@ class TestRepoMapAllLanguages(unittest.TestCase):
         self._test_language_repo_map("tsx", "tsx", "UserProps")
 
     def test_language_csharp(self):
+        try:
+            from grep_ast.tsl import get_language
+
+            get_language("csharp")
+        except ValueError as err:
+            if "Incompatible Language version" in str(err):
+                self.skipTest(f"C# tree-sitter grammar ABI unsupported by runtime: {err}")
+            raise
         self._test_language_repo_map("csharp", "cs", "IGreeter")
 
     def test_language_elisp(self):
