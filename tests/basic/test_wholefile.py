@@ -56,7 +56,7 @@ class TestWholeFileCoder(unittest.TestCase):
             f.write("Original content\n")
 
         # Initialize WholeFileCoder with the temporary directory
-        io = InputOutput(yes=True)
+        io = InputOutput(yes=True, input_history_file=None)
         coder = WholeFileCoder(main_model=self.GPT35, io=io, fnames=[sample_file])
 
         # Set the partial response content with the updated content
@@ -230,7 +230,7 @@ after b
 ```
 """
         # Initialize WholeFileCoder with the temporary directory
-        io = InputOutput(yes=True)
+        io = InputOutput(yes=True, input_history_file=None)
         coder = WholeFileCoder(main_model=self.GPT35, io=io, fnames=[fname_a, fname_b])
 
         # Set the partial response content with the updated content
@@ -326,7 +326,7 @@ after b
         files = [file1]
 
         # Initialize the Coder object with the mocked IO and mocked repo
-        coder = Coder.create(self.GPT35, "whole", io=InputOutput(), fnames=files, stream=False)
+        coder = Coder.create(self.GPT35, "whole", io=InputOutput(input_history_file=None), fnames=files, stream=False)
 
         # no trailing newline so the response content below doesn't add ANOTHER newline
         new_content = "new\ntwo\nthree"
