@@ -49,6 +49,9 @@ class TestModels(unittest.TestCase):
         model = Model("gpt-4-0613")
         self.assertEqual(model.info["max_input_tokens"], 8 * 1024)
 
+        model = Model("gpt-4-32k-0613")
+        self.assertEqual(model.info["max_input_tokens"], 32 * 1024)
+
     @patch("os.environ")
     def test_sanity_check_model_all_set(self, mock_environ):
         mock_environ.get.return_value = "dummy_value"
@@ -485,7 +488,6 @@ class TestModels(unittest.TestCase):
         # Test use_temperature=True (default) uses temperature=0
         model = Model("gpt-4")
         self.assertTrue(model.use_temperature)
-        self.assertEqual(model.use_temperature, True)
 
         # Test use_temperature=False doesn't pass temperature
         model = Model("github/o1-mini")
